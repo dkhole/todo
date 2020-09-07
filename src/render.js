@@ -1,17 +1,26 @@
 import { addEventCheckbox, addEventTodo } from './events.js';
 import Edit from './edit-icon.png'
 
-//get image
-const editIcon = new Image();
-editIcon.src = Edit;
-
-function renderCheckbox(todo) {
+export function renderClosed(domTodo) {
+    domTodo.className = "todo-item";
     const checkbox = document.createElement("div");
     checkbox.className = "checkbox-wrapper";
     const inpCheckbox = document.createElement("input");
     inpCheckbox.type = "checkbox";
-    todo.appendChild(checkbox);
+    domTodo.appendChild(checkbox);
     checkbox.appendChild(inpCheckbox);
+}
+
+export function renderOpen(domTodo) {
+    const editIcon = new Image();
+    editIcon.src = Edit;
+    domTodo.className = "todo-open";
+
+    const editWrapper = document.createElement("div");
+    editWrapper.className = "edit-wrapper";
+
+    editWrapper.appendChild(editIcon);
+    domTodo.appendChild(editWrapper);
 }
 
 
@@ -63,49 +72,29 @@ export function renderTodo(card, todo) {
 
     if(todo.isOpen()) { 
         //try toggle height through eventjs, just render the appropriate todo for open or closed
-
-        //to toggle height
-        todoItem.className = "todo-open";
-
-        //render icon instead of checkbox
-        const editWrapper = document.createElement("div");
-        editWrapper.className = "edit-wrapper";
-        editWrapper.appendChild(editIcon);
-
-        todoItem.appendChild(editWrapper);
+        renderOpen(todoItem);
 
         if(todo.getComplete()) {
             titleWrap.style.textDecoration = "line-through";
         }
 
-        addEventTodo(card, todo, todoItem, editWrapper);
+        addEventTodo(card, todo, todoItem, todoItem.lastElementChild);
     } else {
-        
-        todoItem.className = "todo-item";
         //render closed
         //create checkbox and cross out if complete
 
-        //renderCheckbox(todoItem);
+        renderClosed(todoItem);
 
-        const checkbox = document.createElement("div");
-        checkbox.className = "checkbox-wrapper";
-        const inpCheckbox = document.createElement("input");
-        inpCheckbox.type = "checkbox";
-        todoItem.appendChild(checkbox);
-        checkbox.appendChild(inpCheckbox);
+        const inpCheck = todoItem.lastElementChild.lastElementChild;
 
-        addEventCheckbox(card, inpCheckbox, todo);
-        //add event to checkbox, if checked toggle complete 
+
         if(todo.getComplete()) {
-            inpCheckbox.checked = true;
+            inpCheck.checked = true;
             titleWrap.style.textDecoration = "line-through";
         }
-
-        addEventTodo(card, todo, todoItem, inpCheckbox);
+        addEventCheckbox(titleWrap, inpCheck, todo);
+        addEventTodo(card, todo, todoItem, inpCheck);
     }
-
-    
-    
 }
 
 export function renderCard(card) {

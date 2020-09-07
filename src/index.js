@@ -29,4 +29,6 @@ addEventsOnLoad(stockCard);
 renderCard(stockCard);
 
 renderList(stockCard);
+prompt("made it");
+
 
