@@ -62,6 +62,8 @@ export function renderTodo(card, todo) {
     todoItem.appendChild(dueDate);
 
     if(todo.isOpen()) { 
+        //try toggle height through eventjs, just render the appropriate todo for open or closed
+
         //to toggle height
         todoItem.className = "todo-open";
 
@@ -71,6 +73,10 @@ export function renderTodo(card, todo) {
         editWrapper.appendChild(editIcon);
 
         todoItem.appendChild(editWrapper);
+
+        if(todo.getComplete()) {
+            titleWrap.style.textDecoration = "line-through";
+        }
 
         addEventTodo(card, todo, todoItem, editWrapper);
     } else {

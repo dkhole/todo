@@ -40,42 +40,16 @@ export function addEventTodo(card, todo, domTodo, lastButton) {
         //if its open, set class  
         
         if(todo.isOpen()) {
-            domTodo.className = "todo-item";
 //maybe try resize and then render todolist to add transition
  //i want to render whole todo and add a >new event listener< on each change
-            domTodo.lastChild.remove();
 
-            const checkbox = document.createElement("div");
-            checkbox.className = "checkbox-wrapper";
-            const inpCheckbox = document.createElement("input");
-            inpCheckbox.type = "checkbox";
-            domTodo.appendChild(checkbox);
-            checkbox.appendChild(inpCheckbox);
-            
-            addEventCheckbox(card, inpCheckbox, todo);
             todo.setOpen(false);
-            domTodo.addEventTodo(card, todo, domTodo, inpCheckbox);
-
-            
-            //renderList(card);
+            renderList(card);
         } else {
-            //style enlarged todo
-            domTodo.className = "todo-open";
-            //remove checkbox
-            //render image
-            domTodo.lastChild.remove();
-            //prompt(domTodo.lastChild.className);
-            //lastButton.remove();
-            //checkboxWrapper.remove();            
-
-            const editWrapper = document.createElement("div");
-            editWrapper.className = "edit-wrapper";
-            domTodo.appendChild(editWrapper);
-            editWrapper.appendChild(editIcon);
-
+            
             //add click event for edit button
             todo.setOpen(true);
-            domTodo.addEventTodo(card, todo, domTodo, editWrapper);
+            renderList(card);
         }
     });
 }
