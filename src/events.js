@@ -37,7 +37,7 @@ const callOpen = function(todo, domTodo, lastButton) {
         todo.setOpen(true);
 
         domTodo.removeEventListener('click', openTodo);
-        domTodo.addEventListener('click', callClosed(todo, domTodo, domTodo.lastElementChild));
+        domTodo.addEventListener('click', callClosed(todo, domTodo, domTodo.children[0].lastElementChild));
     }
 }
 
@@ -49,13 +49,14 @@ const callClosed = function(todo, domTodo, lastButton) {
         lastButton.remove();
         renderClosed(domTodo);
 
-        const inpCheckbox = domTodo.lastElementChild.lastElementChild;
+        const inpCheckbox = domTodo.children[0].lastElementChild.lastElementChild;
+        const titleWrap = domTodo.children[0].children[1];
 
         if(todo.getComplete()) {
             inpCheckbox.checked = true;
         }
 
-        addEventCheckbox(domTodo.children[1], inpCheckbox, todo);
+        addEventCheckbox(titleWrap, inpCheckbox, todo);
 
         domTodo.removeEventListener('click', closeTodo);
         domTodo.addEventListener('click', callOpen(todo, domTodo, inpCheckbox));

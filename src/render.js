@@ -3,12 +3,14 @@ import Edit from './edit-icon.png'
 
 export function renderClosed(domTodo) {
     domTodo.className = "todo-item";
+
     const checkbox = document.createElement("div");
     checkbox.className = "checkbox-wrapper";
     const inpCheckbox = document.createElement("input");
     inpCheckbox.type = "checkbox";
-    domTodo.appendChild(checkbox);
+
     checkbox.appendChild(inpCheckbox);
+    domTodo.children[0].appendChild(checkbox);
 }
 
 export function renderOpen(domTodo) {
@@ -20,7 +22,7 @@ export function renderOpen(domTodo) {
     editWrapper.className = "edit-wrapper";
 
     editWrapper.appendChild(editIcon);
-    domTodo.appendChild(editWrapper);
+    domTodo.children[0].appendChild(editWrapper);
 }
 
 
@@ -28,8 +30,10 @@ export function renderOpen(domTodo) {
 export function renderTodo(card, todo) {
     const todoList = document.getElementById("todo-list");
     const todoItem = document.createElement("div");
+    const todoTop = document.createElement("div");
    
     todoList.appendChild(todoItem);
+    todoItem.appendChild(todoTop);
 
     const arrowWrap = document.createElement("div");
     arrowWrap.className = "arrow-wrapper";
@@ -38,12 +42,12 @@ export function renderTodo(card, todo) {
     //arrowWrap.textContent = ">";
 
     arrowWrap.appendChild(spanArrow);
-    todoItem.appendChild(arrowWrap);
+    todoTop.appendChild(arrowWrap);
 
     const titleWrap = document.createElement("div");
     titleWrap.className = "todo-title-wrap";
     titleWrap.textContent = todo.getTitle();
-    todoItem.appendChild(titleWrap);
+    todoTop.appendChild(titleWrap);
 
     const priority = document.createElement("div");
     priority.className = "priority-meter";
@@ -67,8 +71,8 @@ export function renderTodo(card, todo) {
     dueDate.className = "due-date";
     dueDate.textContent = todo.getDueDate();
 
-    todoItem.appendChild(priority);
-    todoItem.appendChild(dueDate);
+    todoTop.appendChild(priority);
+    todoTop.appendChild(dueDate);
 
     if(todo.isOpen()) { 
         //try toggle height through eventjs, just render the appropriate todo for open or closed
@@ -78,20 +82,21 @@ export function renderTodo(card, todo) {
             titleWrap.style.textDecoration = "line-through";
         }
 
-        addEventTodo(card, todo, todoItem, todoItem.lastElementChild);
+        addEventTodo(card, todo, todoItem, todoItem.children[0].lastElementChild);
     } else {
         //render closed
         //create checkbox and cross out if complete
 
         renderClosed(todoItem);
 
-        const inpCheck = todoItem.lastElementChild.lastElementChild;
+        const inpCheck = todoItem.children[0].lastElementChild.lastElementChild;
 
 
         if(todo.getComplete()) {
             inpCheck.checked = true;
             titleWrap.style.textDecoration = "line-through";
         }
+        
         addEventCheckbox(titleWrap, inpCheck, todo);
         addEventTodo(card, todo, todoItem, inpCheck);
     }
