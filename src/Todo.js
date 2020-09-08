@@ -1,11 +1,13 @@
 import startOfToday from 'date-fns/startOfToday';
+import format from 'date-fns/format';
+
 
 //function factory for todos
 const Todo = (title, priority, dueDate) => {
     //construct
     let _title = title;
     let _priority = priority;
-    const startDate = startOfToday();
+    const startDate = format(startOfToday(), 'MM/dd/yyyy');
     let _dueDate = dueDate;
     let notes = "";
     let complete = false;

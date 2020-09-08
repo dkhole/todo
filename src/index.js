@@ -20,7 +20,8 @@ const Board = (() => {
 })();
 
 const stockCard = Card("General");
-const stockTodo = Todo("Take a walk", "low", "15 Aug");
+const stockTodo = Todo("Take a walk", "med", "15 Dec");
+stockTodo.setNotes("Take a brisk walk to maccas and get a big mac whilst smoking a ciggie");
 
 Board.addCard(stockCard);
 stockCard.addTodo(stockTodo);

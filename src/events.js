@@ -33,7 +33,7 @@ const callOpen = function(todo, domTodo, lastButton) {
 
         lastButton.parentElement.remove();
 
-        renderOpen(domTodo);
+        renderOpen(domTodo, todo);
         todo.setOpen(true);
 
         domTodo.removeEventListener('click', openTodo);
@@ -45,7 +45,11 @@ const callClosed = function(todo, domTodo, lastButton) {
 
     return function closeTodo(e) {
         if(e.target.parentElement == lastButton) {return;}
-        
+
+        //remove both open render divs - note and start date
+        domTodo.children[1].remove();
+        domTodo.children[1].remove();
+
         lastButton.remove();
         renderClosed(domTodo);
 

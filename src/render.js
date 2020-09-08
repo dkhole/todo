@@ -2,6 +2,8 @@ import { addEventCheckbox, addEventTodo } from './events.js';
 import Edit from './edit-icon.png'
 
 export function renderClosed(domTodo) {
+
+    //doesnt remove previous render
     domTodo.className = "todo-item";
 
     const checkbox = document.createElement("div");
@@ -13,7 +15,7 @@ export function renderClosed(domTodo) {
     domTodo.children[0].appendChild(checkbox);
 }
 
-export function renderOpen(domTodo) {
+export function renderOpen(domTodo, todo) {
     const editIcon = new Image();
     editIcon.src = Edit;
     domTodo.className = "todo-open";
@@ -23,6 +25,30 @@ export function renderOpen(domTodo) {
 
     editWrapper.appendChild(editIcon);
     domTodo.children[0].appendChild(editWrapper);
+
+    const notesWrapper = document.createElement("div");
+    notesWrapper.className = "notes-wrapper";
+    const titleNotes = document.createElement("div");
+    titleNotes.className = "title-notes";
+    titleNotes.textContent = "NOTES";
+    const notes = document.createElement("div");
+    notes.className = "notes";
+    notes.textContent = todo.getNotes();
+
+    domTodo.appendChild(notesWrapper);
+    notesWrapper.appendChild(titleNotes);
+    notesWrapper.appendChild(notes);
+
+    const startDateWrapper = document.createElement("div");
+    startDateWrapper.className = "start-date-wrapper";
+    startDateWrapper.textContent = "Started On";
+
+    const startDate = document.createElement("div");
+    startDate.className = "start-date";    
+    startDate.textContent = todo.getStartDate();
+
+    startDateWrapper.appendChild(startDate);
+    domTodo.appendChild(startDateWrapper);
 }
 
 
@@ -76,7 +102,7 @@ export function renderTodo(card, todo) {
 
     if(todo.isOpen()) { 
         //try toggle height through eventjs, just render the appropriate todo for open or closed
-        renderOpen(todoItem);
+        renderOpen(todoItem, todo);
 
         if(todo.getComplete()) {
             titleWrap.style.textDecoration = "line-through";
@@ -96,7 +122,7 @@ export function renderTodo(card, todo) {
             inpCheck.checked = true;
             titleWrap.style.textDecoration = "line-through";
         }
-        
+
         addEventCheckbox(titleWrap, inpCheck, todo);
         addEventTodo(card, todo, todoItem, inpCheck);
     }
