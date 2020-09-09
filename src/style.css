@@ -223,3 +223,143 @@ input[type="image"] {
     background-color: grey;
 }
 
+#overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    transition: opacity 500ms;
+    visibility: hidden;
+    opacity: 0;
+}
+
+#edit-form {
+    margin: 200px auto;
+    padding: 0 20px;
+    height: 500px;
+    width: 400px;
+    background-color: rgb(49, 49, 49);
+}
+
+#edit-title {
+    font-size: 2rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 5.5px;
+    text-align: right;
+    float: left;
+    width: 50%;
+    margin: 30px 0;
+}
+
+#title-input {
+    position: absolute;
+    height: 20px;
+    left: 0;
+    top: -5px;
+    border: 0;
+    outline: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid green;
+    background-color: transparent;
+    color: white;
+    transition: 0.2s all;
+}
+
+/*#title-input:focus {
+    top: 20px;
+}*/
+
+#title-label {
+    position: relative;
+    color: white;
+    top: 0;
+    left: -190px;
+    font-size: 1.25rem;
+}
+
+#close {
+   float: right;
+   margin-top: 15px;
+   height: 30px;
+   width: 30px;
+   text-align: left;
+   background-color: Transparent;
+   background-repeat:no-repeat;
+   border: none;
+   cursor:pointer;
+   overflow: hidden;
+   outline:none;
+   color: white;
+   font-size: 1.5rem;
+}
+
+#close:hover {
+    color: red;
+}
+
+#text-group {
+    position: relative;
+    top: 100px;
+    height: 50px;
+
+}
+
+#drop-group {
+    position: relative;
+    top: 90px;  
+    height: 100px;
+    padding-left: 10px;
+}
+
+#priority-label {
+    position: relative;
+    left: -190px;
+    top: 5px;
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+}
+
+#dropdown {
+    position: relative;
+    top: -37.5px;
+    left: 100px;
+}
+
+#date-group {
+    position: relative;
+    top: 50px;
+    left: 10px;
+    font-size: 1.25rem;
+}
+
+#due-date-input {
+    position: relative;
+    left: 20px;
+}
+
+#notes-group {
+    position: relative;
+    top: 80px;
+    left: 10px;
+}
+
+#notes-label {
+    font-size: 1.25rem;
+}
+
+#notes-input {
+    height: 80px;
+    width: 350px;
+    padding: 10px;
+}
+
+#submit {
+    position: relative;
+    height: 30px;
+    width: 100px;
+    top: 100px;
+    left: 150px;
+}

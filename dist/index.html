@@ -19,6 +19,45 @@
             </div>
         </div>
     </div>
+    <div id="overlay">
+        <div id="edit-form">
+            <div id="edit-title">Edit Todo</div><input type="button" id="close" value="x">
+            <form id="edit-todo">
+                <div id="text-group">
+                    <label for="title" id="title-label">Title </label>
+                    <input 
+                        type="text" 
+                        name="title" 
+                        id="title-input" 
+                    />
+                </div>
+                <div id="drop-group">
+                    <p id="priority-label">Priority?</p>
+                    <select name="priority-select" id="dropdown">
+                        <option value="">Click to choose an option</option>
+                        <option value="low">Low</option>
+                        <option value="med">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div id="date-group">
+                    <label for="due" id="due-label">Due Date?</label>
+                    <input type="date" id="due-date-input" name="due">
+                </div>
+                <div id="notes-group">
+                    <label for="notes-input" id="notes-label">Notes?</p>
+                    <textarea
+                        id="notes-input"
+                        name="notes-input"
+                        placeholder="Enter your notes here..."
+                    ></textarea>
+                </div>
+                <div id="submit-wrap">
+                    <input type="submit" value="Submit" id="submit">
+                </div>
+            </form>
+        </div>
+    </div>
     <div id="card-list">
 
     </div>

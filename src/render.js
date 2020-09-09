@@ -50,6 +50,19 @@ export function renderOpen(domTodo, todo) {
         editWrapper.appendChild(editIcon);
         domTodo.children[0].appendChild(editWrapper);
 
+        //add event to edit wrapper
+    editWrapper.addEventListener("click", () => {
+        const overlay = document.getElementById("overlay");
+        overlay.style.visibility = "visible";
+        overlay.style.opacity = "1";
+
+        const close = document.getElementById("close");
+        close.addEventListener("click", () => {
+            overlay.style.visibility = "hidden";
+            overlay.style.opacity = "0";
+        })
+    })
+
         const notesWrapper = document.createElement("div");
         notesWrapper.className = "notes-wrapper";
         const titleNotes = document.createElement("div");
