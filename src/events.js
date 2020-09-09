@@ -5,8 +5,7 @@ function addTodoFromDom(card) {
     //if buttons been clicked or input text has been 'entered'
     const inputTodo = document.getElementById("quick-add");
     if(inputTodo.value) {
-        const todoName = inputTodo.value;
-        const newTodo = Todo(inputTodo.value, "low", "-");
+        const newTodo = Todo(inputTodo.value, "low", "---");
         card.addTodo(newTodo);
     }
     renderList(card);
@@ -15,12 +14,14 @@ function addTodoFromDom(card) {
 export function addEventCheckbox(titleWrap, checkbox, todo) {
     checkbox.addEventListener("change", (e) => {
         if(e.target.checked) {
-            prompt("check mate");
             todo.toggleComplete(true);
-            titleWrap.style.textDecoration = "line-through";            
+            titleWrap.style.textDecoration = "line-through"; 
+            titleWrap.parentElement.style.backgroundColor = "rgb(19, 19, 19)";           
         } else {
             todo.toggleComplete(false); 
+            //revert style
             titleWrap.style.textDecoration = "none";
+            titleWrap.parentElement.style.backgroundColor = "rgb(49, 49, 49)";
         }
     });
 }
@@ -34,10 +35,14 @@ const callOpen = function(todo, domTodo, lastButton) {
         lastButton.parentElement.remove();
 
         renderOpen(domTodo, todo);
-        todo.setOpen(true);
 
-        domTodo.removeEventListener('click', openTodo);
-        domTodo.addEventListener('click', callClosed(todo, domTodo, domTodo.children[0].lastElementChild));
+        //need to wait for renderopen to finish
+        //setTimeout(function(){
+            todo.setOpen(true);
+
+            domTodo.removeEventListener('click', openTodo);
+            domTodo.addEventListener('click', callClosed(todo, domTodo, domTodo.children[0].lastElementChild));
+        //}, 200);
     }
 }
 
@@ -47,11 +52,12 @@ const callClosed = function(todo, domTodo, lastButton) {
         if(e.target.parentElement == lastButton) {return;}
 
         //remove both open render divs - note and start date
+
         domTodo.children[1].remove();
         domTodo.children[1].remove();
 
         lastButton.remove();
-        renderClosed(domTodo);
+        renderClosed(domTodo, todo);
 
         const inpCheckbox = domTodo.children[0].lastElementChild.lastElementChild;
         const titleWrap = domTodo.children[0].children[1];
