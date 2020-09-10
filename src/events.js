@@ -36,13 +36,10 @@ const callOpen = function(todo, domTodo, lastButton) {
 
         renderOpen(domTodo, todo);
 
-        //need to wait for renderopen to finish
-        //setTimeout(function(){
-            todo.setOpen(true);
+        todo.setOpen(true);
 
-            domTodo.removeEventListener('click', openTodo);
-            domTodo.addEventListener('click', callClosed(todo, domTodo, domTodo.children[0].lastElementChild));
-        //}, 200);
+        domTodo.removeEventListener('click', openTodo);
+        domTodo.addEventListener('click', callClosed(todo, domTodo, domTodo.children[0].lastElementChild));
     }
 }
 
