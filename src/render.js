@@ -1,5 +1,11 @@
-import { addEventCheckbox, addEventTodo } from './events.js';
+import { addEventCheckbox, addEventTodo, addEventsOnForm } from './events.js';
 import Edit from './edit-icon.png'
+
+export function renderCloseForm() {
+    const overlay = document.getElementById("overlay");
+    overlay.style.visibility = "hidden";
+    overlay.style.opacity = "0";
+}
 
 export function renderPriorityColorOpen(priority, arrowWrap, titleNotes, startDateWrapper, todo) {
     switch(todo.getPriority()) {
@@ -39,6 +45,58 @@ export function renderPriorityColorClosed(todo, priority, arrowWrap) {
             arrowWrap.style.color = "rgb(255, 0, 0)";
             break;
     }
+}
+
+export function renderForm(card) {
+    const overlay = document.getElementById("overlay");
+    overlay.style.visibility = "visible";
+    overlay.style.opacity = "1";  
+}
+
+export function renderOpen(domTodo, todo) {
+
+    const editIcon = new Image();
+    editIcon.src = Edit;
+
+    const editWrapper = document.createElement("div");
+    editWrapper.className = "edit-wrapper";
+    editWrapper.appendChild(editIcon);
+    domTodo.children[0].appendChild(editWrapper);
+
+    //add event to edit wrapper - move into event function
+    editWrapper.addEventListener("click", () => {
+        renderForm();
+    })
+    //event to ensure code renders only after transition ends
+    const transitionEnd = transEvent();
+    domTodo.addEventListener(transitionEnd, endTransition(todo, domTodo), false);
+    domTodo.className = "todo-open";
+}
+
+export function renderClosed(domTodo, todo) {
+
+    domTodo.className = "todo-item";
+
+    if(todo.getComplete()) {
+        domTodo.style.backgroundColor = "rgb(19, 19, 19)";
+        domTodo.children[0].style.backgroundColor = "rgb(19, 19, 19)";
+    } else {
+        domTodo.style.backgroundColor = "rgb(49, 49, 49)";
+        domTodo.children[0].style.backgroundColor = "rgb(49, 49, 49)";
+    }
+
+    const checkbox = document.createElement("div");
+    checkbox.className = "checkbox-wrapper";
+    const inpCheckbox = document.createElement("input");
+    inpCheckbox.type = "checkbox";
+
+    const arrowWrap = domTodo.children[0].children[0];
+
+    arrowWrap.lastElementChild.style.transform = "rotate(-90deg)";
+    arrowWrap.lastElementChild.style.marginLeft = "9.5px";
+
+    checkbox.appendChild(inpCheckbox);
+    domTodo.children[0].appendChild(checkbox);
 }
 
 //clean up this function, can probably put render wrappers into a function refractor renderopen as well
@@ -96,60 +154,6 @@ function renderStaticOpen(domTodo, todo) {
     arrowWrap.lastElementChild.style.transform = "rotate(90deg)";
     arrowWrap.lastElementChild.style.marginLeft = "16px";
     renderPriorityColorOpen(priority, arrowWrap, titleNotes, startDateWrapper, todo);
-}
-
-export function renderOpen(domTodo, todo) {
-
-    const editIcon = new Image();
-    editIcon.src = Edit;
-
-    const editWrapper = document.createElement("div");
-    editWrapper.className = "edit-wrapper";
-    editWrapper.appendChild(editIcon);
-    domTodo.children[0].appendChild(editWrapper);
-
-    //add event to edit wrapper - move into event function
-    editWrapper.addEventListener("click", () => {
-        const overlay = document.getElementById("overlay");
-        overlay.style.visibility = "visible";
-        overlay.style.opacity = "1";
-
-        const close = document.getElementById("close");
-        close.addEventListener("click", () => {
-            overlay.style.visibility = "hidden";
-            overlay.style.opacity = "0";
-        })
-    })
-    //event to ensure code renders only after transition ends
-    const transitionEnd = transEvent();
-    domTodo.addEventListener(transitionEnd, endTransition(todo, domTodo), false);
-    domTodo.className = "todo-open";
-}
-
-export function renderClosed(domTodo, todo) {
-
-    domTodo.className = "todo-item";
-
-    if(todo.getComplete()) {
-        domTodo.style.backgroundColor = "rgb(19, 19, 19)";
-        domTodo.children[0].style.backgroundColor = "rgb(19, 19, 19)";
-    } else {
-        domTodo.style.backgroundColor = "rgb(49, 49, 49)";
-        domTodo.children[0].style.backgroundColor = "rgb(49, 49, 49)";
-    }
-
-    const checkbox = document.createElement("div");
-    checkbox.className = "checkbox-wrapper";
-    const inpCheckbox = document.createElement("input");
-    inpCheckbox.type = "checkbox";
-
-    const arrowWrap = domTodo.children[0].children[0];
-
-    arrowWrap.lastElementChild.style.transform = "rotate(-90deg)";
-    arrowWrap.lastElementChild.style.marginLeft = "9.5px";
-
-    checkbox.appendChild(inpCheckbox);
-    domTodo.children[0].appendChild(checkbox);
 }
 
 export function renderTodo(card, todo) {

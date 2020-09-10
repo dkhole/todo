@@ -55,6 +55,7 @@ html, body {
     background-color: rgb(19, 19, 19);
     overflow-x: hidden;
     overflow-y: auto;
+    scrollbar-width: none;
 }
 
 .todo-item {
@@ -75,6 +76,10 @@ html, body {
     border: solid 2px black;
     border-radius: 5px;
     background-color: rgb(63, 63, 63);
+    transition: all ease-in-out 0.5s;
+}
+
+.todo-top {
     transition: all ease-in-out 0.5s;
 }
 
@@ -198,7 +203,7 @@ img {
 
 input[type="text"] {
     height: 60%;
-    width: 87.5%;
+    width: 90%;
     margin: 10px 10px 0 10px;
     border-radius: 5px;
     vertical-align: top;
@@ -207,14 +212,17 @@ input[type="text"] {
 
 input[type="image"] {
     position: absolute;
-    top: 0;
-    right: 12.5px;
+    top: -2px;
+    right: 5px;
     margin-top: 9px;
     width: 45px;
     height: 45px;
-    background-color: orange;
+    background-color: white;
     transform: rotate(-90deg);
     border-radius: 100%;
+}
+input[type="image"]:hover {
+    background-color: orange;
 }
 
 #card-list {
@@ -235,7 +243,7 @@ input[type="image"] {
     opacity: 0;
 }
 
-#edit-form {
+.form {
     margin: 200px auto;
     padding: 0 20px;
     height: 500px;
@@ -243,7 +251,7 @@ input[type="image"] {
     background-color: rgb(49, 49, 49);
 }
 
-#edit-title {
+#new-title {
     font-size: 2rem;
     font-weight: 400;
     text-transform: uppercase;
@@ -278,6 +286,7 @@ input[type="image"] {
     top: 0;
     left: -190px;
     font-size: 1.25rem;
+    transition: 0.2s all;
 }
 
 #close {
@@ -314,18 +323,29 @@ input[type="image"] {
     padding-left: 10px;
 }
 
+#dropdown {
+    background: transparent;
+    border: 0; 
+    border-bottom: 1px solid green;
+    padding: 5px;
+    color: white;
+    -webkit-appearance: none;
+    position: relative;
+    top: -40px;
+    left: 100px;
+}
+/**
+Not working, look into
+#dropdown > option {
+    background-color: black;
+}
+**/
 #priority-label {
     position: relative;
     left: -190px;
     top: 5px;
     font-size: 1.25rem;
     letter-spacing: 1px;
-}
-
-#dropdown {
-    position: relative;
-    top: -37.5px;
-    left: 100px;
 }
 
 #date-group {
@@ -335,14 +355,19 @@ input[type="image"] {
     font-size: 1.25rem;
 }
 
-#due-date-input {
+#date-input {
     position: relative;
     left: 20px;
+    background: transparent;
+    border: 0; 
+    border-bottom: 1px solid green;
+    color: white;
+    -webkit-appearance: none;
 }
 
 #notes-group {
     position: relative;
-    top: 80px;
+    top: 70px;
     left: 10px;
 }
 
@@ -351,15 +376,28 @@ input[type="image"] {
 }
 
 #notes-input {
-    height: 80px;
-    width: 350px;
+    height: 110px;
+    width: 360px;
     padding: 10px;
+    background: transparent;
+    border: 2px solid green;
+    color: white;
+    -webkit-appearance: none;
+    resize: none;
 }
 
 #submit {
     position: relative;
     height: 30px;
     width: 100px;
-    top: 100px;
+    top: 80px;
     left: 150px;
+    background: transparent;
+    border: 2px solid green;
+    color: white;
+    -webkit-appearance: none;
+}
+
+#submit:hover {
+    background-color: green;
 }

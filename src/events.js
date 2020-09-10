@@ -1,5 +1,6 @@
-import { renderList, renderOpen, renderClosed } from './render.js';
+import { renderList, renderOpen, renderClosed, renderForm, renderCloseForm } from './render.js';
 import Todo from './Todo.js';
+import format from 'date-fns/format';
 
 function addTodoFromDom(card) {
     //if buttons been clicked or input text has been 'entered'
@@ -96,7 +97,71 @@ export function addEventsOnLoad(card) {
 
     const addButton = document.getElementById("add-button");
     addButton.addEventListener('click', () => {
-        addTodoFromDom(card);
-        quickAdd.value = "";
+        renderForm(card);
     });
+
+    addEventsOnForm(card);
+}
+
+export function addEventsOnForm(card) {
+    //close button
+    const close = document.getElementById("close");
+    close.addEventListener("click", () => {
+        renderCloseForm();
+    });
+
+    //title input transition
+    const todoTitle = document.getElementById('title-input');
+    todoTitle.addEventListener('focusin', () => {
+        const titleLabel = document.getElementById('title-label');
+        titleLabel.style.fontSize = "1rem";
+        titleLabel.style.top = "-15px";
+        titleLabel.style.color = "green";
+    });
+    todoTitle.addEventListener('focusout', () => {
+        const titleLabel = document.getElementById('title-label');
+        if(todoTitle.value == "") {
+            titleLabel.style.fontSize = "1.25rem";
+            titleLabel.style.top = "-0";
+            titleLabel.style.color = "white";
+        } else {
+            titleLabel.style.fontSize = "1rem";
+            titleLabel.style.top = "-15px";
+            titleLabel.style.color = "green";
+        }
+        
+    });
+
+    //submit new todo
+    const form = document.getElementById("new-todo");
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const title = document.getElementById("title-input").value;
+        const priority = document.getElementById("dropdown").value;
+        const inputDate = document.getElementById("date-input").value;
+        console.log(inputDate);
+        const inputNotes = document.getElementById("notes-input").value;
+
+        const newTodo = Todo(title, "low", "---");
+
+        if(inputDate.value) {
+            const year = parseInt(inputDate.slice(0, 4));
+            const month = parseInt(inputDate.slice(5, 7)) - 1;
+            const day = parseInt(inputDate.slice(8, 10));
+            
+            newTodo.setDueDate(format(new Date(year, month, day), 'dd MMM'));
+        }
+
+        if(priority.value) {
+            newTodo.setPriority(priority.value);
+        }
+
+        newTodo.setNotes(inputNotes);
+
+        card.addTodo(newTodo);
+        form.reset();
+        renderCloseForm();
+        renderList(card);
+    })
 }
