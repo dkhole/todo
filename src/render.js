@@ -41,6 +41,63 @@ export function renderPriorityColorClosed(todo, priority, arrowWrap) {
     }
 }
 
+//clean up this function, can probably put render wrappers into a function refractor renderopen as well
+function renderStaticOpen(domTodo, todo) {
+    const editIcon = new Image();
+    editIcon.src = Edit;
+    domTodo.className = "todo-open";
+    if(todo.getComplete()) {
+        domTodo.style.backgroundColor = "rgb(19, 19, 19)";
+        domTodo.children[0].style.backgroundColor = "rgb(19, 19, 19)";
+    } else {
+        domTodo.style.backgroundColor = "rgb(63, 63, 63)";
+        domTodo.children[0].style.backgroundColor = "rgb(63, 63, 63)";
+    }
+
+    const editWrapper = document.createElement("div");
+    editWrapper.className = "edit-wrapper";
+    editWrapper.appendChild(editIcon);
+    domTodo.children[0].appendChild(editWrapper);
+
+    //add event to edit wrapper
+    editWrapper.addEventListener("click", () => {
+        const overlay = document.getElementById("overlay");
+        overlay.style.visibility = "visible";
+        overlay.style.opacity = "1";
+
+        const close = document.getElementById("close");
+        close.addEventListener("click", () => {
+            overlay.style.visibility = "hidden";
+            overlay.style.opacity = "0";
+        })
+    })
+
+    const notesWrapper = document.createElement("div");
+    notesWrapper.className = "notes-wrapper";
+    const titleNotes = document.createElement("div");
+    titleNotes.className = "title-notes";
+    titleNotes.textContent = "NOTES";
+    const notes = document.createElement("div");
+    notes.className = "notes";
+    notes.textContent = todo.getNotes();
+    domTodo.appendChild(notesWrapper);
+    notesWrapper.appendChild(titleNotes);
+    notesWrapper.appendChild(notes);
+    const startDateWrapper = document.createElement("div");
+    startDateWrapper.className = "start-date-wrapper";
+    startDateWrapper.textContent = "Started On";
+    const startDate = document.createElement("div");
+    startDate.className = "start-date";    
+    startDate.textContent = todo.getStartDate();
+    startDateWrapper.appendChild(startDate);
+    domTodo.appendChild(startDateWrapper);
+    const priority = domTodo.children[0].children[2];
+    const arrowWrap = domTodo.children[0].children[0];
+    arrowWrap.lastElementChild.style.transform = "rotate(90deg)";
+    arrowWrap.lastElementChild.style.marginLeft = "16px";
+    renderPriorityColorOpen(priority, arrowWrap, titleNotes, startDateWrapper, todo);
+}
+
 export function renderOpen(domTodo, todo) {
 
     const editIcon = new Image();
@@ -134,7 +191,7 @@ export function renderTodo(card, todo) {
 
     //now determine the rest depending on open status
     if(todo.isOpen()) { 
-        renderOpen(todoItem, todo);
+        renderStaticOpen(todoItem, todo);
 
         if(todo.getComplete()) {
             titleWrap.style.textDecoration = "line-through";
