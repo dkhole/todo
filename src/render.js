@@ -63,8 +63,8 @@ export function renderOpen(domTodo, todo) {
             overlay.style.opacity = "0";
         })
     })
-
     //event to ensure code renders only after transition ends
+    const transitionEnd = transEvent();
     domTodo.addEventListener(transitionEnd, endTransition(todo, domTodo), false);
     domTodo.className = "todo-open";
 }
