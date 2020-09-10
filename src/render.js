@@ -2,9 +2,51 @@ import { addEventCheckbox, addEventTodo, addEventsOnForm } from './events.js';
 import Edit from './edit-icon.png'
 
 export function renderCloseForm() {
-    const overlay = document.getElementById("overlay");
+    const overlay = document.getElementById("overlay-new");
+    const form = document.getElementById("new-todo");
+    form.reset();
     overlay.style.visibility = "hidden";
     overlay.style.opacity = "0";
+}
+
+export function renderForm() {
+    const overlay = document.getElementById("overlay-new");
+    overlay.style.visibility = "visible";
+    overlay.style.opacity = "1";  
+}
+
+export function renderEditForm(card, todo) {
+    const overlay = document.getElementById("overlay-edit");
+    overlay.style.visibility = "visible";
+    overlay.style.opacity = "1";  
+
+    //change input values to value of todo
+    const title = document.getElementById("title-input-edit");
+    title.value = todo.getTitle();
+    const priority = document.getElementById("dropdown-edit");
+    priority.value = todo.getPriority();
+    const inputNotes = document.getElementById("notes-input-edit");
+    inputNotes.value = todo.getNotes();
+
+    //card get index of todo
+    const i = card.getIndexTodo(todo.getTitle());
+    const hidden = document.createElement("div");
+    hidden.id = "hidden";
+    hidden.textContent = i;
+    hidden.style.visibility = "hidden";
+
+    overlay.appendChild(hidden);
+}
+
+export function renderCloseEditForm() {
+    const overlay = document.getElementById("overlay-edit");
+    const form = document.getElementById("edit-todo");
+    const hidden = document.getElementById("hidden");
+
+    hidden.remove();
+    form.reset();
+    overlay.style.visibility = "hidden";
+    overlay.style.opacity = "0"; 
 }
 
 export function renderPriorityColorOpen(priority, arrowWrap, titleNotes, startDateWrapper, todo) {
@@ -47,13 +89,7 @@ export function renderPriorityColorClosed(todo, priority, arrowWrap) {
     }
 }
 
-export function renderForm(card) {
-    const overlay = document.getElementById("overlay");
-    overlay.style.visibility = "visible";
-    overlay.style.opacity = "1";  
-}
-
-export function renderOpen(domTodo, todo) {
+export function renderOpen(card, domTodo, todo) {
 
     const editIcon = new Image();
     editIcon.src = Edit;
@@ -65,7 +101,8 @@ export function renderOpen(domTodo, todo) {
 
     //add event to edit wrapper - move into event function
     editWrapper.addEventListener("click", () => {
-        renderForm();
+        renderEditForm(card, todo);
+        //change values of input to todo values
     })
     //event to ensure code renders only after transition ends
     const transitionEnd = transEvent();
@@ -100,7 +137,7 @@ export function renderClosed(domTodo, todo) {
 }
 
 //clean up this function, can probably put render wrappers into a function refractor renderopen as well
-function renderStaticOpen(domTodo, todo) {
+function renderStaticOpen(card, domTodo, todo) {
     const editIcon = new Image();
     editIcon.src = Edit;
     domTodo.className = "todo-open";
@@ -119,15 +156,7 @@ function renderStaticOpen(domTodo, todo) {
 
     //add event to edit wrapper
     editWrapper.addEventListener("click", () => {
-        const overlay = document.getElementById("overlay");
-        overlay.style.visibility = "visible";
-        overlay.style.opacity = "1";
-
-        const close = document.getElementById("close");
-        close.addEventListener("click", () => {
-            overlay.style.visibility = "hidden";
-            overlay.style.opacity = "0";
-        })
+        renderEditForm(card, todo);
     })
 
     const notesWrapper = document.createElement("div");
@@ -195,7 +224,7 @@ export function renderTodo(card, todo) {
 
     //now determine the rest depending on open status
     if(todo.isOpen()) { 
-        renderStaticOpen(todoItem, todo);
+        renderStaticOpen(card, todoItem, todo);
 
         if(todo.getComplete()) {
             titleWrap.style.textDecoration = "line-through";

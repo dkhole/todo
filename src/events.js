@@ -1,4 +1,4 @@
-import { renderList, renderOpen, renderClosed, renderForm, renderCloseForm } from './render.js';
+import { renderList, renderOpen, renderClosed, renderForm, renderCloseForm, renderCloseEditForm } from './render.js';
 import Todo from './Todo.js';
 import format from 'date-fns/format';
 
@@ -27,7 +27,7 @@ export function addEventCheckbox(titleWrap, checkbox, todo) {
     });
 }
 
-const callOpen = function(todo, domTodo, lastButton) {
+const callOpen = function(card, todo, domTodo, lastButton) {
 
     return function openTodo(e) {
 
@@ -35,16 +35,16 @@ const callOpen = function(todo, domTodo, lastButton) {
 
         lastButton.parentElement.remove();
 
-        renderOpen(domTodo, todo);
+        renderOpen(card, domTodo, todo);
 
         todo.setOpen(true);
 
         domTodo.removeEventListener('click', openTodo);
-        domTodo.addEventListener('click', callClosed(todo, domTodo, domTodo.children[0].lastElementChild));
+        domTodo.addEventListener('click', callClosed(card, todo, domTodo, domTodo.children[0].lastElementChild));
     }
 }
 
-const callClosed = function(todo, domTodo, lastButton) {
+const callClosed = function(card, todo, domTodo, lastButton) {
 
     return function closeTodo(e) {
         if(e.target.parentElement == lastButton) {return;}
@@ -67,7 +67,7 @@ const callClosed = function(todo, domTodo, lastButton) {
         addEventCheckbox(titleWrap, inpCheckbox, todo);
 
         domTodo.removeEventListener('click', closeTodo);
-        domTodo.addEventListener('click', callOpen(todo, domTodo, inpCheckbox));
+        domTodo.addEventListener('click', callOpen(card, todo, domTodo, inpCheckbox));
 
         todo.setOpen(false);
     }
@@ -76,9 +76,9 @@ const callClosed = function(todo, domTodo, lastButton) {
 export function addEventTodo(card, todo, domTodo, lastButton) {
 
     if(todo.isOpen()) {
-        domTodo.addEventListener('click', callClosed(todo, domTodo, lastButton));
+        domTodo.addEventListener('click', callClosed(card, todo, domTodo, lastButton));
     } else {
-        domTodo.addEventListener('click', callOpen(todo, domTodo, lastButton));
+        domTodo.addEventListener('click', callOpen(card, todo, domTodo, lastButton));
     }
 }
 
@@ -97,7 +97,7 @@ export function addEventsOnLoad(card) {
 
     const addButton = document.getElementById("add-button");
     addButton.addEventListener('click', () => {
-        renderForm(card);
+        renderForm();
     });
 
     addEventsOnForm(card);
@@ -105,10 +105,11 @@ export function addEventsOnLoad(card) {
 
 export function addEventsOnForm(card) {
     //close button
-    const closeButtons = document.querySelectorAll(".close");
-    closeButtons.forEach(button => button.addEventListener("click", () => {
-        renderCloseForm();
-    }));
+    const closeButtonNew = document.getElementById("close-new");
+    const closeButtonEdit = document.getElementById("close-edit");
+
+    closeButtonNew.addEventListener('click', () => { renderCloseForm() });
+    closeButtonEdit.addEventListener('click', () => { renderCloseEditForm() });
 
     //title input transition
     const titleInputs = document.querySelectorAll('.title-input');
@@ -130,6 +131,43 @@ export function addEventsOnForm(card) {
                 titleLabel.style.color = "green";
             }
         });
+    });
+
+    //edit todo
+    const editForm = document.getElementById("edit-todo");
+    editForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        //get todo
+        const index = document.getElementById("hidden").textContent;
+        const todo = card.getTodoList()[index];
+        
+        const title = document.getElementById("title-input-edit").value;
+        todo.setTitle(title);
+
+        const priority = document.getElementById("dropdown-edit").value;
+
+        if(priority) {
+            todo.setPriority(priority);
+        } else {
+            todo.setPriority(low);
+        }
+
+        const inputDate = document.getElementById("date-input-edit").value;
+        if(inputDate) {
+            const year = parseInt(inputDate.slice(0, 4));
+            const month = parseInt(inputDate.slice(5, 7)) - 1;
+            const day = parseInt(inputDate.slice(8, 10));
+            
+            todo.setDueDate(format(new Date(year, month, day), 'dd MMM'));
+        } else {
+            todo.setDueDate("---");
+        }
+        
+        const inputNotes = document.getElementById("notes-input-edit").value;
+        todo.setNotes(inputNotes);
+        renderCloseEditForm();
+        renderList(card);
     });
 
     //submit new todo

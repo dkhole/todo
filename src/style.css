@@ -231,7 +231,7 @@ input[type="image"]:hover {
     background-color: grey;
 }
 
-#overlay {
+.overlay {
     position: fixed;
     top: 0;
     bottom: 0;
@@ -288,6 +288,12 @@ input[type="image"]:hover {
     left: -190px;
     font-size: 1.25rem;
     transition: 0.2s all;
+}
+
+#title-label-edit {
+    font-size: 1rem;
+    top: -15px;
+    color: green;
 }
 
 .close {
