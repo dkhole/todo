@@ -19,9 +19,9 @@
             </div>
         </div>
     </div>
-    <div id="overlay">
+    <div id="overlay-new" class="overlay">
         <div id="new-form" class="form">
-            <div id="new-title" class="form-title">New Todo</div><input type="button" class="close" value="x">
+            <div id="new-title" class="form-title">New Todo</div><input type="button" class="close" id="close-new" value="x">
             <form id="new-todo" class="form-todo">
                 <div class="text-group">
                     <label for="title" class="title-label">Title </label>
@@ -58,13 +58,58 @@
                         autocomplete="off"
                     ></textarea>
                 </div>
-                <div id="submit-wrap">
+                <div class="submit-wrap">
                     <input type="submit" value="Submit" id="submit" class="submit">
                 </div>
             </form>
         </div>
-        
     </div>
+
+    <div id="overlay-edit" class="overlay">
+        <div id="edit-form" class="form">
+            <div id="edit-title" class="form-title">edit Todo</div><input type="button" class="close" id="close-edit" value="x">
+            <form id="edit-todo" class="form-todo">
+                <div class="text-group">
+                    <label for="title" class="title-label" id="title-label-edit">Title </label>
+                    <input 
+                        type="text"
+                        id="title-input-edit"
+                        name="title" 
+                        class="title-input"
+                        title="Only the title is required"
+                        autocomplete="off"
+                        required
+                    />
+                </div>
+                <div class="drop-group">
+                    <p class="priority-label">Priority?</p>
+                    <select name="priority-select" id="dropdown-edit" class="dropdown" autocomplete="off">
+                        <option value="">Click to choose an option</option>
+                        <option value="low">Low</option>
+                        <option value="med">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="date-group">
+                    <label for="due">Due Date?</label>
+                    <input type="date" id="date-input-edit" class="date-input" name="due" autocomplete="off">
+                </div>
+                <div class="notes-group">
+                    <label for="notes-input" class="notes-label">Notes?</p>
+                    <textarea
+                        id="notes-input-edit"
+                        class="notes-input"
+                        name="notes-input"
+                        placeholder="Enter your notes here..."
+                        autocomplete="off"
+                    ></textarea>
+                </div>
+                <div class="submit-wrap">
+                    <input type="submit" value="Submit" id="submit-edit" class="submit">
+                </div>
+            </form>
+        </div>
+    </div>    
     <div id="card-list">
 
     </div>
