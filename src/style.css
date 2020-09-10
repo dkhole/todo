@@ -201,7 +201,7 @@ img {
     overflow: hidden;
 }
 
-input[type="text"] {
+#quick-add {
     height: 60%;
     width: 90%;
     margin: 10px 10px 0 10px;
@@ -251,7 +251,7 @@ input[type="image"]:hover {
     background-color: rgb(49, 49, 49);
 }
 
-#new-title {
+.form-title {
     font-size: 2rem;
     font-weight: 400;
     text-transform: uppercase;
@@ -262,13 +262,14 @@ input[type="image"]:hover {
     margin: 30px 0;
 }
 
-#title-input {
+.title-input {
     position: absolute;
     height: 20px;
-    left: 0;
-    top: -5px;
+    left: 10px;
+    top: 10px;
     border: 0;
     outline: 0;
+    width: 90%;
     padding-bottom: 10px;
     border-bottom: 2px solid green;
     background-color: transparent;
@@ -280,16 +281,16 @@ input[type="image"]:hover {
     top: 20px;
 }*/
 
-#title-label {
+.title-label {
     position: relative;
     color: white;
-    top: 0;
+    top: 5px;
     left: -190px;
     font-size: 1.25rem;
     transition: 0.2s all;
 }
 
-#close {
+.close {
    float: right;
    margin-top: 15px;
    height: 30px;
@@ -305,25 +306,24 @@ input[type="image"]:hover {
    font-size: 1.5rem;
 }
 
-#close:hover {
+.close:hover {
     color: red;
 }
 
-#text-group {
+.text-group {
     position: relative;
     top: 100px;
     height: 50px;
-
 }
 
-#drop-group {
+.drop-group {
     position: relative;
     top: 90px;  
     height: 100px;
     padding-left: 10px;
 }
 
-#dropdown {
+.dropdown {
     background: transparent;
     border: 0; 
     border-bottom: 1px solid green;
@@ -340,7 +340,7 @@ Not working, look into
     background-color: black;
 }
 **/
-#priority-label {
+.priority-label {
     position: relative;
     left: -190px;
     top: 5px;
@@ -348,14 +348,14 @@ Not working, look into
     letter-spacing: 1px;
 }
 
-#date-group {
+.date-group {
     position: relative;
     top: 50px;
     left: 10px;
     font-size: 1.25rem;
 }
 
-#date-input {
+.date-input {
     position: relative;
     left: 20px;
     background: transparent;
@@ -365,17 +365,17 @@ Not working, look into
     -webkit-appearance: none;
 }
 
-#notes-group {
+.notes-group {
     position: relative;
     top: 70px;
     left: 10px;
 }
 
-#notes-label {
+.notes-label {
     font-size: 1.25rem;
 }
 
-#notes-input {
+.notes-input {
     height: 110px;
     width: 360px;
     padding: 10px;
@@ -386,7 +386,7 @@ Not working, look into
     resize: none;
 }
 
-#submit {
+.submit {
     position: relative;
     height: 30px;
     width: 100px;
@@ -398,6 +398,6 @@ Not working, look into
     -webkit-appearance: none;
 }
 
-#submit:hover {
+.submit:hover {
     background-color: green;
 }
