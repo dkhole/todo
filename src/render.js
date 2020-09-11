@@ -1,5 +1,7 @@
 import { addEventCheckbox, addEventTodo, addEventsOnForm } from './events.js';
 import Edit from './edit-icon.png'
+import Bin from './bin-icon.png'
+import Sortable from 'sortablejs';
 
 export function renderCloseForm() {
     const overlay = document.getElementById("overlay-new");
@@ -29,7 +31,7 @@ export function renderEditForm(card, todo) {
     inputNotes.value = todo.getNotes();
 
     //card get index of todo
-    const i = card.getIndexTodo(todo.getTitle());
+    const i = card.getTodoList().indexOf(todo);
     const hidden = document.createElement("div");
     hidden.id = "hidden";
     hidden.textContent = i;
@@ -89,6 +91,18 @@ export function renderPriorityColorClosed(todo, priority, arrowWrap) {
     }
 }
 
+export function renderBin(domTodo) {
+    const editBin = new Image();
+    editBin.src = Bin
+
+    const binWrapper = document.createElement("div");
+    binWrapper.className = "bin";
+    binWrapper.appendChild(editBin);
+    domTodo.children[0].appendChild(binWrapper);
+
+    return binWrapper;
+}
+
 export function renderOpen(card, domTodo, todo) {
 
     const editIcon = new Image();
@@ -141,6 +155,7 @@ function renderStaticOpen(card, domTodo, todo) {
     const editIcon = new Image();
     editIcon.src = Edit;
     domTodo.className = "todo-open";
+
     if(todo.getComplete()) {
         domTodo.style.backgroundColor = "rgb(19, 19, 19)";
         domTodo.children[0].style.backgroundColor = "rgb(19, 19, 19)";
@@ -159,30 +174,50 @@ function renderStaticOpen(card, domTodo, todo) {
         renderEditForm(card, todo);
     })
 
-    const notesWrapper = document.createElement("div");
-    notesWrapper.className = "notes-wrapper";
-    const titleNotes = document.createElement("div");
-    titleNotes.className = "title-notes";
-    titleNotes.textContent = "NOTES";
-    const notes = document.createElement("div");
-    notes.className = "notes";
-    notes.textContent = todo.getNotes();
-    domTodo.appendChild(notesWrapper);
-    notesWrapper.appendChild(titleNotes);
-    notesWrapper.appendChild(notes);
-    const startDateWrapper = document.createElement("div");
-    startDateWrapper.className = "start-date-wrapper";
-    startDateWrapper.textContent = "Started On";
-    const startDate = document.createElement("div");
-    startDate.className = "start-date";    
-    startDate.textContent = todo.getStartDate();
-    startDateWrapper.appendChild(startDate);
-    domTodo.appendChild(startDateWrapper);
+    const titleNotes = renderNotes(domTodo, todo);
+    
+    const startDateWrapper = renderStartDate(domTodo, todo);
+
     const priority = domTodo.children[0].children[2];
-    const arrowWrap = domTodo.children[0].children[0];
-    arrowWrap.lastElementChild.style.transform = "rotate(90deg)";
-    arrowWrap.lastElementChild.style.marginLeft = "16px";
+
+    const arrowWrap = rotateArrow(domTodo);
+
     renderPriorityColorOpen(priority, arrowWrap, titleNotes, startDateWrapper, todo);
+}
+
+function renderArrow(todoTop) {
+    const arrowWrap = document.createElement("div");
+    arrowWrap.className = "arrow-wrapper";
+    const spanArrow = document.createElement("span");
+    spanArrow.textContent = ">";
+
+    arrowWrap.appendChild(spanArrow);
+    todoTop.appendChild(arrowWrap);
+
+    return arrowWrap
+}
+
+function renderTitle(todoTop, todo) {
+    const titleWrap = document.createElement("div");
+    titleWrap.className = "todo-title-wrap";
+    titleWrap.textContent = todo.getTitle();
+    todoTop.appendChild(titleWrap);
+
+    return titleWrap;
+}
+
+function renderPriorityDate(todoTop, todo) {
+    const priority = document.createElement("div");
+    priority.className = "priority-meter";
+    todoTop.appendChild(priority);
+
+    //probably need to change this when we get user input
+    const dueDate = document.createElement("div");
+    dueDate.className = "due-date";
+    dueDate.textContent = todo.getDueDate();
+    todoTop.appendChild(dueDate);
+
+    return priority;
 }
 
 export function renderTodo(card, todo) {
@@ -196,31 +231,11 @@ export function renderTodo(card, todo) {
     todoList.appendChild(todoItem);
     todoItem.appendChild(todoTop);
 
-    const arrowWrap = document.createElement("div");
-    arrowWrap.className = "arrow-wrapper";
-    const spanArrow = document.createElement("span");
-    spanArrow.textContent = ">";
-    //arrowWrap.textContent = ">";
+    const arrowWrap = renderArrow(todoTop);
 
-    arrowWrap.appendChild(spanArrow);
-    todoTop.appendChild(arrowWrap);
+    const titleWrap = renderTitle(todoTop, todo);
 
-    const titleWrap = document.createElement("div");
-    titleWrap.className = "todo-title-wrap";
-    titleWrap.textContent = todo.getTitle();
-    todoTop.appendChild(titleWrap);
-
-    const priority = document.createElement("div");
-    priority.className = "priority-meter";
-    
-
-    //probably need to change this when we get user input
-    const dueDate = document.createElement("div");
-    dueDate.className = "due-date";
-    dueDate.textContent = todo.getDueDate();
-
-    todoTop.appendChild(priority);
-    todoTop.appendChild(dueDate);
+    const priority = renderPriorityDate(todoTop, todo);
 
     //now determine the rest depending on open status
     if(todo.isOpen()) { 
@@ -237,7 +252,6 @@ export function renderTodo(card, todo) {
 
         const inpCheck = todoItem.children[0].lastElementChild.lastElementChild;
 
-
         if(todo.getComplete()) {
             inpCheck.checked = true;
             titleWrap.style.textDecoration = "line-through";
@@ -251,20 +265,137 @@ export function renderTodo(card, todo) {
 }
 
 export function renderCard(card) {
+
+    if(card == "empty") {
+        const title = document.getElementById("card-title");
+        title.textContent = "empty";
+    }
+
     const title = document.getElementById("card-title");
     title.textContent = card.getCardTitle();
 }
 
 export function renderList(card) {
 
+    if(card == "empty") {
+        deleteDomList();
+    } else {
+        deleteDomList();
+
+        card.getTodoList().forEach(element => {
+            renderTodo(card, element);
+        });
+    
+        const domTodoList = document.getElementById("todo-list");
+
+        Sortable.create(domTodoList, { 
+            ghostClass: 'ghost'
+        });
+    } 
+}
+
+export function renderDeleteTodo(card, todo) {
+    
     const todoList = document.getElementById("todo-list");
+    const todoItem = document.createElement("div");
+    const todoTop = document.createElement("div");
 
-    while(todoList.lastElementChild) {
-        todoList.removeChild(todoList.lastElementChild);
+    //first render top bar as its shared with both open and closed
+    todoItem.className = "todo-delete";
+    todoTop.className = "todo-top";
+
+    todoList.appendChild(todoItem);
+    todoItem.appendChild(todoTop);
+
+    renderArrow(todoTop);
+
+    renderTitle(todoTop, todo);
+
+    renderPriorityDate(todoTop, todo);
+
+    const binWrapper = renderBin(todoItem);
+
+    binWrapper.addEventListener('click', () => {
+        todoItem.remove();
+        card.removeTodo(todo);
+    })
+
+}
+
+export function deleteDomList() {
+    const domTodoList = [...(document.getElementById("todo-list").children)];
+        //remove all dom list items and rerender delete option view
+        for(let i = 0; i < domTodoList.length; i++) {
+            let domTodo = domTodoList[i]
+            domTodo.remove();
+        }
+}
+
+export function renderListDelete(card) {
+    //previous render already removed
+    card.getTodoList().forEach(todo => {
+        renderDeleteTodo(card, todo);
+    })
+}
+
+export function renderDeck(Board, domCardList) {
+    const cardsWrap = document.createElement("div");
+    cardsWrap.id = "cards-wrap";
+    domCardList.appendChild(cardsWrap);
+
+    const cardList = Board.getCardList();
+
+    for(let i = 0; i < cardList.length; i++) {
+        renderCardDeck(Board, cardList[i], cardsWrap, domCardList);
     }
+}
 
-    card.getTodoList().forEach(element => {
-        renderTodo(card, element);
+export function renderCardDeck(Board, card, cardsWrap, domCardList) {
+    const domCard = document.createElement("div");
+    domCard.className = "card";
+
+    const domCardTitle = document.createElement("div");
+
+    domCard.appendChild(domCardTitle);
+    cardsWrap.appendChild(domCard);
+
+    domCardTitle.className = "card-title";
+    domCardTitle.innerHTML = card.getCardTitle();
+
+    //render delete button
+    const delCard = document.createElement("div");
+    delCard.className = "card-delete";
+    domCard.appendChild(delCard);
+    delCard.innerHTML = "X";
+
+    //add event to delete button
+    delCard.addEventListener("click", () => {
+        let result = confirm("Deleting this will delete all the todos within. Are you sure you want to delete?");
+
+        if(result) {
+            //delete card remove prev render, then rerender cards
+            Board.removeCard(card);
+
+            //delete cards wrap and all its children
+            const wrapCards = document.getElementById("cards-wrap");
+            const wrapChildren = [...(wrapCards.children)];
+
+            for(let i = 0; i < wrapChildren.length; i++) {
+                wrapChildren[i].remove();
+            }
+
+            wrapCards.remove();
+
+            renderDeck(Board, domCardList);
+            //if deck isnt empty render first card otherwise render blank
+            if(Board.getCardList().length == 0) {
+                renderList("empty");
+                renderCard("empty");
+            } else {
+                renderList(Board.getCardList()[0]);
+                renderCard(Board.getCardList()[0]);
+            }
+        }
     });
 }
 
@@ -287,6 +418,45 @@ const transEvent = function() {
     }
 }
 
+function renderNotes(domTodo, todo) {
+    const notesWrapper = document.createElement("div");
+    notesWrapper.className = "notes-wrapper";
+    const titleNotes = document.createElement("div");
+    titleNotes.className = "title-notes";
+    titleNotes.textContent = "NOTES";
+    const notes = document.createElement("div");
+    notes.className = "notes";
+    notes.textContent = todo.getNotes();
+
+    domTodo.appendChild(notesWrapper);
+    notesWrapper.appendChild(titleNotes);
+    notesWrapper.appendChild(notes);
+
+    return titleNotes;
+}
+
+function renderStartDate(domTodo, todo) {
+    const startDateWrapper = document.createElement("div");
+    startDateWrapper.className = "start-date-wrapper";
+    startDateWrapper.textContent = "Started On";
+    const startDate = document.createElement("div");
+    startDate.className = "start-date";    
+    startDate.textContent = todo.getStartDate();
+
+    startDateWrapper.appendChild(startDate);
+    domTodo.appendChild(startDateWrapper);
+
+    return startDateWrapper;
+}
+
+function rotateArrow(domTodo) {
+    const arrowWrap = domTodo.children[0].children[0];
+    arrowWrap.lastElementChild.style.transform = "rotate(90deg)";
+    arrowWrap.lastElementChild.style.marginLeft = "16px";
+
+    return arrowWrap;
+}
+
 //destructured in order to reference afterTrans in remove event
 const endTransition = function(todo, domTodo) {
     return function afterTrans(e) {
@@ -301,34 +471,13 @@ const endTransition = function(todo, domTodo) {
                 domTodo.children[0].style.backgroundColor = "rgb(63, 63, 63)";
             }
         
-            const notesWrapper = document.createElement("div");
-            notesWrapper.className = "notes-wrapper";
-            const titleNotes = document.createElement("div");
-            titleNotes.className = "title-notes";
-            titleNotes.textContent = "NOTES";
-            const notes = document.createElement("div");
-            notes.className = "notes";
-            notes.textContent = todo.getNotes();
+            const titleNotes = renderNotes(domTodo, todo);
     
-            domTodo.appendChild(notesWrapper);
-            notesWrapper.appendChild(titleNotes);
-            notesWrapper.appendChild(notes);
-    
-            const startDateWrapper = document.createElement("div");
-            startDateWrapper.className = "start-date-wrapper";
-            startDateWrapper.textContent = "Started On";
-            const startDate = document.createElement("div");
-            startDate.className = "start-date";    
-            startDate.textContent = todo.getStartDate();
-    
-            startDateWrapper.appendChild(startDate);
-            domTodo.appendChild(startDateWrapper);
+            const startDateWrapper = renderStartDate(domTodo, todo);
     
             const priority = domTodo.children[0].children[2];
-            const arrowWrap = domTodo.children[0].children[0];
-            //rotate arrow
-            arrowWrap.lastElementChild.style.transform = "rotate(90deg)";
-            arrowWrap.lastElementChild.style.marginLeft = "16px";
+
+            const arrowWrap = rotateArrow(domTodo);
     
             const transitionEnd = transEvent();
             renderPriorityColorOpen(priority, arrowWrap, titleNotes, startDateWrapper, todo);

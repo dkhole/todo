@@ -16,7 +16,13 @@ const Board = (() => {
             cardList[cardList.length] = newCard;
         }
     }
-    return {getCardList, addCard};
+    const removeCard = (card) => {
+        let index = cardList.indexOf(card);
+        if(index > -1) {
+            cardList.splice(index, 1);
+        }
+    }
+    return {getCardList, addCard, removeCard};
 })();
 
 const stockCard = Card("General");
@@ -30,12 +36,13 @@ stockTodo2.setNotes("make sure to put on bangers and punch on beat. the quicker 
 const stockTodo3 = Todo("Prep soles of feet for strenuous activity", "low", "3 Sept");
 stockTodo3.setNotes("i dont even know what this consists of but will try my hardest to prep feet");
 
-Board.addCard(stockCard);
 stockCard.addTodo(stockTodo1);
 stockCard.addTodo(stockTodo2);
 stockCard.addTodo(stockTodo3);
+Board.addCard(stockCard);
 
-addEventsOnLoad(stockCard);
+
+addEventsOnLoad(Board, stockCard);
 renderCard(stockCard);
 
 renderList(stockCard);

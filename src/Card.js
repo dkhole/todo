@@ -14,19 +14,14 @@ const Card = (title) => {
             todoList[todoList.length] = newTodo;
         }
     }
-    const getIndexTodo = (todoTitle) => {
-        let i = 0;
-
-        for(i = 0; i < todoList.length; i++) {
-            if(todoTitle === todoList[i].getTitle()) {
-                return i;
-            }
+    const removeTodo = (todo) => {
+        let index = todoList.indexOf(todo);
+        if(index > -1) {
+            todoList.splice(index, 1);
         }
-        i = -1;
-        return index;
     }
 
-    return {getCardTitle, getTodoList, setTitle, addTodo, getIndexTodo}
+    return {getCardTitle, getTodoList, setTitle, addTodo, removeTodo}
 };
 
 export default Card;

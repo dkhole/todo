@@ -1,4 +1,4 @@
-import { renderList, renderOpen, renderClosed, renderForm, renderCloseForm, renderCloseEditForm } from './render.js';
+import { renderList, renderOpen, renderClosed, renderForm, renderCloseForm, renderCloseEditForm, renderListDelete, deleteDomList, renderDeck} from './render.js';
 import Todo from './Todo.js';
 import format from 'date-fns/format';
 
@@ -82,8 +82,10 @@ export function addEventTodo(card, todo, domTodo, lastButton) {
     }
 }
 
-export function addEventsOnLoad(card) {
+export function addEventsOnLoad(Board, card) {
 
+    let delFlag = false;
+    let cardOpen = false;
     //submit form on button click and enter key
     //clear input text after each submit
 
@@ -101,6 +103,68 @@ export function addEventsOnLoad(card) {
     });
 
     addEventsOnForm(card);
+
+    
+    const del = document.getElementById("delete");
+    del.addEventListener("click", () => {
+        
+        if(delFlag) { 
+            del.id = "delete";
+            del.textContent = "Delete Todo";
+
+            deleteDomList();
+            renderList(card);
+            delFlag = false;
+        } else {
+            del.id = "delete-clicked";
+            del.textContent = "Stop Delete";
+    
+            deleteDomList();
+            renderListDelete(card);
+            delFlag = true;
+        }
+    });
+
+    const domCardList = document.getElementById("card-list");
+    const openCards = document.getElementById("open-cards");
+    const mainCard = document.getElementById("main-card");
+    const cardWrapper = document.getElementById("card-wrapper");
+
+    openCards.addEventListener("click", () => {
+        if(cardOpen) {
+            //close card list
+            domCardList.style.height = "2.5%";
+            openCards.style.height = "100%";
+            mainCard.style.height = "90%";
+            cardWrapper.style.height = "83%";
+
+            cardOpen = false;
+
+            //delete cards wrap and all its children
+            const wrapCards = document.getElementById("cards-wrap");
+            const wrapChildren = [...(wrapCards.children)];
+
+            for(let i = 0; i < wrapChildren.length; i++) {
+                wrapChildren[i].remove();
+            }
+
+            wrapCards.remove();
+
+        } else {
+            //open card list
+            domCardList.style.height = "32.5%";
+            openCards.style.height = "10%";
+            mainCard.style.height = "67.5%";
+            cardWrapper.style.height = "90%";
+
+            //card wrapper 95%
+            cardOpen = true;
+
+            //render card list
+            renderDeck(Board, domCardList);
+            
+        }
+    })
 }
 
 export function addEventsOnForm(card) {
