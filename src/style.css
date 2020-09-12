@@ -580,9 +580,13 @@ Not working, look into
     position: absolute;
     bottom: 10px;
     left: 10px;
-    color: red;
+    color: white;
     font-family: 'Kumbh Sans', sans-serif;
     cursor: pointer;
+}
+
+.card-delete:hover {
+    color: red;
 }
 
 #add-card {

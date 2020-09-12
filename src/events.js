@@ -129,7 +129,9 @@ export function deleteEvent(card, del, delFlag) {
         } else {
             del.id = "delete-clicked";
             del.textContent = "Stop Delete";
-    
+
+            //remove event listener for everything but bin
+            //remove quickAdd, newForm, card arrow -> new card
             deleteDomList();
             renderListDelete(card);
             delFlag = true;

@@ -63,6 +63,27 @@ general.addTodo(stockTodo3);
 
 Board.addCard(general);
 
+const shopping = Card("Shopping");
+
+const shopItem1 = Todo("Banana", "low", "---");
+const shopItem2 = Todo("apple", "low", "---");
+shopItem2.toggleComplete(true);
+const shopItem3 = Todo("orange", "high", "---");
+const shopItem4 = Todo("kiwi", "med", "---");
+shopItem4.toggleComplete(true);
+const shopItem5 = Todo("avocado", "low", "---");
+shopItem5.toggleComplete(true);
+const shopItem6 = Todo("cheese", "high", "---");
+
+shopping.addTodo(shopItem1);
+shopping.addTodo(shopItem2);
+shopping.addTodo(shopItem3);
+shopping.addTodo(shopItem4);
+shopping.addTodo(shopItem5);
+shopping.addTodo(shopItem6);
+
+Board.addCard(shopping);
+
 addEventsOnLoad(Board, tutorialCard);
 renderCard(tutorialCard);
 
