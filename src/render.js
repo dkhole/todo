@@ -8,17 +8,25 @@ export function renderCloseForm() {
     const overlay = document.getElementById("overlay-new");
     const form = document.getElementById("new-todo");
     form.reset();
+    const cardList = document.getElementById("card-list");
+    cardList.style.visibility = "visible";
     overlay.style.visibility = "hidden";
     overlay.style.opacity = "0";
 }
 
 export function renderForm() {
     const overlay = document.getElementById("overlay-new");
+    const cardList = document.getElementById("card-list");
+    cardList.style.visibility = "hidden";
     overlay.style.visibility = "visible";
     overlay.style.opacity = "1";  
 }
 
 export function renderEditForm(card, todo) {
+
+    const cardList = document.getElementById("card-list");
+    cardList.style.visibility = "hidden";
+
     const overlay = document.getElementById("overlay-edit");
     overlay.style.visibility = "visible";
     overlay.style.opacity = "1";  
@@ -42,6 +50,9 @@ export function renderEditForm(card, todo) {
 }
 
 export function renderCloseEditForm() {
+    const cardList = document.getElementById("card-list");
+    cardList.style.visibility = "visible";
+
     const overlay = document.getElementById("overlay-edit");
     const form = document.getElementById("edit-todo");
     const hidden = document.getElementById("hidden");
