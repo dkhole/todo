@@ -1,4 +1,4 @@
-import { addEventCheckbox, addEventTodo, addEventsOnForm, removeEventsForLoad, reloadEvents, refreshEvents } from './events.js';
+import { addEventCheckbox, addEventTodo, addEventsOnForm, removeEventsForLoad, reloadEvents, refreshEvents, clickCard } from './events.js';
 import Edit from './edit-icon.png';
 import Bin from './bin-icon.png';
 import Sortable from 'sortablejs';
@@ -368,7 +368,7 @@ export function renderDeck(Board, domCardList, eventsLoad) {
             Board.addCard(newCard);
             //rerender
             removeDeckRender();
-            refreshEvents(newCard, eventsLoad);
+            eventsLoad = refreshEvents(newCard, eventsLoad);
             renderDeck(Board, domCardList, eventsLoad);
        }
         
@@ -414,7 +414,9 @@ export function renderCardDeck(Board, card, cardsWrap, domCardList, eventsLoad) 
     domCard.className = "card";
 
     domCard.addEventListener('click', () => {
-        refreshEvents(card, eventsLoad);
+        removeDeckRender();
+        eventsLoad = refreshEvents(card, eventsLoad);
+        renderDeck(Board, domCardList, eventsLoad);
     })
 
     const domCardTitle = document.createElement("div");
@@ -478,7 +480,7 @@ export function renderCardDeck(Board, card, cardsWrap, domCardList, eventsLoad) 
             } else {
                 //rerender
                 removeDeckRender();
-                refreshEvents(firstCard, eventsLoad);
+                eventsLoad = refreshEvents(card, eventsLoad);
                 renderDeck(Board, domCardList, eventsLoad);
             }
         }

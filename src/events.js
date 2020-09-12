@@ -82,12 +82,31 @@ export function addEventTodo(card, todo, domTodo, lastButton) {
     }
 }
 
+//simulate click to rerender card
+export function clickCard(card) {
+    const cardsWrap = document.getElementById("cards-wrap");
+
+    if(cardsWrap) {
+        const cardTitle = card.getCardTitle();
+        const cardList = cardsWrap.children;
+        for(let i = 0; i < cardList.length; i++) {
+            if(cardList[i].children[0].textContent == cardTitle) {
+                cardList[i].click();
+            }
+        }
+    }
+}
+
 export function quickAddEvent(card) {
     const quickEvent = function(e) {
         const quickAdd = document.getElementById("quick-add");
         if(e.key == 'Enter') {
             addTodoFromDom(card);
             quickAdd.value = "";
+            //rerender card
+            //get index of card then if dom element of card exists
+            
+            clickCard(card);
         }
     }
     return quickEvent;
@@ -105,6 +124,7 @@ export function deleteEvent(card, del, delFlag) {
 
             deleteDomList();
             renderList(card);
+            clickCard(card);
             delFlag = false;
         } else {
             del.id = "delete-clicked";
@@ -132,6 +152,13 @@ function openCardsEvent (Board, cardOpen, eventsLoad) {
             mainCard.style.height = "90%";
             cardWrapper.style.height = "83%";
 
+            const domTodoList = document.getElementById("todo-list").children;
+
+     
+            for(let i = 0; i < domTodoList.length; i++) {
+                domTodoList[i].className = domTodoList[i].className.substring(0, 9);
+            }
+
             cardOpen = false;
 
             //delete button, cards wrap and all its children
@@ -143,8 +170,12 @@ function openCardsEvent (Board, cardOpen, eventsLoad) {
             openCards.style.height = "10%";
             mainCard.style.height = "67.5%";
             cardWrapper.style.height = "90%";
-
-            //card wrapper 95%
+            //toggle smaller todolist height
+            const domTodoList1 = document.getElementById("todo-list").children;
+            for(let y = 0; y < domTodoList1.length; y++) {
+                domTodoList1[y].className += " card-list-todo";
+            }
+            
             cardOpen = true;
 
             //render card list
@@ -163,6 +194,7 @@ export function refreshEvents(card, eventsLoad) {
     //reload new card events
     eventsLoad = [];
     eventsLoad = reloadEvents(card);
+    return eventsLoad;
 }
 
 export function addEventsOnLoad(Board, card) {
@@ -178,7 +210,6 @@ export function addEventsOnLoad(Board, card) {
     quickAdd.addEventListener('keypress', quickEvent, true);
     eventsLoad.push(quickEvent);
 
-    //same remove function
     const addEvent = addButtonEvent();
     const addButton = document.getElementById("add-button");
     addButton.addEventListener('click', addEvent, true);
@@ -264,6 +295,7 @@ export function editFormEvent(card) {
         todo.setNotes(inputNotes);
         renderCloseEditForm();
         renderList(card);
+        clickCard(card);
     }
     return editEvent;
 }
@@ -298,6 +330,7 @@ export function newFormEvent(card) {
         form.reset();
         renderCloseForm();
         renderList(card);
+        clickCard(card);
     }
 
     return newEvent;

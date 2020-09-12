@@ -107,6 +107,10 @@ html, body {
     border: solid 0.5px orange;
 }
 
+.card-list-todo {
+    height: 12.5%;
+}
+
 .todo-open {
     display: block;
     height: 40%;
