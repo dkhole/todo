@@ -1,7 +1,8 @@
-import { addEventCheckbox, addEventTodo, addEventsOnForm } from './events.js';
-import Edit from './edit-icon.png'
-import Bin from './bin-icon.png'
+import { addEventCheckbox, addEventTodo, addEventsOnForm, removeEventsForLoad, reloadEvents } from './events.js';
+import Edit from './edit-icon.png';
+import Bin from './bin-icon.png';
 import Sortable from 'sortablejs';
+import Card from './Card.js';
 
 export function renderCloseForm() {
     const overlay = document.getElementById("overlay-new");
@@ -269,10 +270,10 @@ export function renderCard(card) {
     if(card == "empty") {
         const title = document.getElementById("card-title");
         title.textContent = "empty";
-    }
-
-    const title = document.getElementById("card-title");
-    title.textContent = card.getCardTitle();
+    } else {
+        const title = document.getElementById("card-title");
+        title.textContent = card.getCardTitle();
+    }    
 }
 
 export function renderList(card) {
@@ -338,7 +339,50 @@ export function renderListDelete(card) {
     })
 }
 
-export function renderDeck(Board, domCardList) {
+export function removeDeckRender() {
+    const addCard = document.getElementById("add-card");
+    addCard.remove();
+    
+    const wrapCards = document.getElementById("cards-wrap");
+    const wrapChildren = [...(wrapCards.children)];
+
+    for(let i = 0; i < wrapChildren.length; i++) {
+        wrapChildren[i].remove();
+    }
+
+    wrapCards.remove();
+}
+
+export function renderDeck(Board, domCardList, eventsLoad) {
+    
+    //add button
+    const addCard = document.createElement("div");
+    addCard.id = "add-card";
+    addCard.style.backgroundImage = "url(https://image.flaticon.com/icons/png/512/32/32360.png)";
+    addCard.addEventListener("click", () => {
+        const newCardTitle = prompt("Title of your new card? (Recommend 1 word max)");
+       
+        if(newCardTitle != "") {
+            const newCard = Card(newCardTitle);
+
+            Board.addCard(newCard);
+            //rerender
+            removeDeckRender();
+            renderCard(newCard);
+            renderList(newCard);
+            //remove and reload events
+            removeEventsForLoad(eventsLoad);
+            
+            //reload new card events
+            eventsLoad = [];
+            eventsLoad = reloadEvents(newCard);
+            renderDeck(Board, domCardList, eventsLoad);
+       }
+        
+    })
+
+    domCardList.appendChild(addCard);
+
     const cardsWrap = document.createElement("div");
     cardsWrap.id = "cards-wrap";
     domCardList.appendChild(cardsWrap);
@@ -346,11 +390,11 @@ export function renderDeck(Board, domCardList) {
     const cardList = Board.getCardList();
 
     for(let i = 0; i < cardList.length; i++) {
-        renderCardDeck(Board, cardList[i], cardsWrap, domCardList);
+        renderCardDeck(Board, cardList[i], cardsWrap, domCardList, eventsLoad);
     }
 }
 
-export function renderCardDeck(Board, card, cardsWrap, domCardList) {
+export function renderCardDeck(Board, card, cardsWrap, domCardList, eventsLoad) {
     const domCard = document.createElement("div");
     domCard.className = "card";
 
@@ -375,25 +419,33 @@ export function renderCardDeck(Board, card, cardsWrap, domCardList) {
         if(result) {
             //delete card remove prev render, then rerender cards
             Board.removeCard(card);
-
-            //delete cards wrap and all its children
-            const wrapCards = document.getElementById("cards-wrap");
-            const wrapChildren = [...(wrapCards.children)];
-
-            for(let i = 0; i < wrapChildren.length; i++) {
-                wrapChildren[i].remove();
-            }
-
-            wrapCards.remove();
-
-            renderDeck(Board, domCardList);
-            //if deck isnt empty render first card otherwise render blank
+            const firstCard = Board.getCardList()[0];
+            
+            //if deck is empty render empty otherwise render first card
             if(Board.getCardList().length == 0) {
-                renderList("empty");
+                //rerender
+                removeDeckRender();
                 renderCard("empty");
+                renderList("empty");
+                //remove and reload events
+                removeEventsForLoad(eventsLoad);
+                
+                //reload new card events
+                eventsLoad = [];
+                eventsLoad = reloadEvents(firstCard);
+                renderDeck(Board, domCardList, eventsLoad);
             } else {
-                renderList(Board.getCardList()[0]);
-                renderCard(Board.getCardList()[0]);
+                //rerender
+                removeDeckRender();
+                renderCard(firstCard);
+                renderList(firstCard);
+                //remove and reload events
+                removeEventsForLoad(eventsLoad);
+                
+                //reload new card events
+                eventsLoad = [];
+                eventsLoad = reloadEvents(firstCard);
+                renderDeck(Board, domCardList, eventsLoad);
             }
         }
     });
