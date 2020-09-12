@@ -1,4 +1,4 @@
-import { addEventCheckbox, addEventTodo, addEventsOnForm, removeEventsForLoad, reloadEvents } from './events.js';
+import { addEventCheckbox, addEventTodo, addEventsOnForm, removeEventsForLoad, reloadEvents, refreshEvents } from './events.js';
 import Edit from './edit-icon.png';
 import Bin from './bin-icon.png';
 import Sortable from 'sortablejs';
@@ -368,14 +368,7 @@ export function renderDeck(Board, domCardList, eventsLoad) {
             Board.addCard(newCard);
             //rerender
             removeDeckRender();
-            renderCard(newCard);
-            renderList(newCard);
-            //remove and reload events
-            removeEventsForLoad(eventsLoad);
-            
-            //reload new card events
-            eventsLoad = [];
-            eventsLoad = reloadEvents(newCard);
+            refreshEvents(newCard, eventsLoad);
             renderDeck(Board, domCardList, eventsLoad);
        }
         
@@ -396,7 +389,12 @@ export function renderDeck(Board, domCardList, eventsLoad) {
 
 export function renderCardDeck(Board, card, cardsWrap, domCardList, eventsLoad) {
     const domCard = document.createElement("div");
+    //need to add event to card
     domCard.className = "card";
+
+    domCard.addEventListener('click', () => {
+        refreshEvents(card, eventsLoad);
+    })
 
     const domCardTitle = document.createElement("div");
 
@@ -413,7 +411,8 @@ export function renderCardDeck(Board, card, cardsWrap, domCardList, eventsLoad) 
     delCard.innerHTML = "X";
 
     //add event to delete button
-    delCard.addEventListener("click", () => {
+    delCard.addEventListener("click", (e) => {
+
         let result = confirm("Deleting this will delete all the todos within. Are you sure you want to delete?");
 
         if(result) {
@@ -437,14 +436,7 @@ export function renderCardDeck(Board, card, cardsWrap, domCardList, eventsLoad) 
             } else {
                 //rerender
                 removeDeckRender();
-                renderCard(firstCard);
-                renderList(firstCard);
-                //remove and reload events
-                removeEventsForLoad(eventsLoad);
-                
-                //reload new card events
-                eventsLoad = [];
-                eventsLoad = reloadEvents(firstCard);
+                refreshEvents(firstCard, eventsLoad);
                 renderDeck(Board, domCardList, eventsLoad);
             }
         }

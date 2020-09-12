@@ -1,4 +1,4 @@
-import { renderList, renderOpen, renderClosed, renderForm, renderCloseForm, renderCloseEditForm, renderListDelete, deleteDomList, renderDeck, removeDeckRender} from './render.js';
+import { renderCard, renderList, renderOpen, renderClosed, renderForm, renderCloseForm, renderCloseEditForm, renderListDelete, deleteDomList, renderDeck, removeDeckRender} from './render.js';
 import Todo from './Todo.js';
 import format from 'date-fns/format';
 
@@ -154,6 +154,17 @@ function openCardsEvent (Board, cardOpen, eventsLoad) {
     return openEvent;
 }
 
+export function refreshEvents(card, eventsLoad) {
+    renderCard(card);
+    renderList(card);
+    //remove and reload events
+    removeEventsForLoad(eventsLoad);
+    
+    //reload new card events
+    eventsLoad = [];
+    eventsLoad = reloadEvents(card);
+}
+
 export function addEventsOnLoad(Board, card) {
 
     let delFlag = false;
@@ -166,7 +177,6 @@ export function addEventsOnLoad(Board, card) {
     const quickAdd = document.getElementById("quick-add");
     quickAdd.addEventListener('keypress', quickEvent, true);
     eventsLoad.push(quickEvent);
-
 
     //same remove function
     const addEvent = addButtonEvent();
