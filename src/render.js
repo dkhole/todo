@@ -445,27 +445,6 @@ export function renderCardDeck(Board, card, cardsWrap, domCardList, eventsLoad) 
             renderPriorityCircle(todoList[y], priorityCardWrapper);
         }
     }
-    
-    
-    
-    //circle for each todo
-    /*const priorityCircle2 = document.createElement("div");
-    priorityCircle2.className = "priority-circle";
-    priorityCardWrapper.appendChild(priorityCircle2);
-    //circle for each todo
-    const priorityCircle3 = document.createElement("div");
-    priorityCircle3.className = "priority-circle";
-    priorityCardWrapper.appendChild(priorityCircle3);
-    const priorityCircle4 = document.createElement("div");
-    priorityCircle4.className = "priority-circle";
-    priorityCardWrapper.appendChild(priorityCircle4);
-    const priorityCircle5 = document.createElement("div");
-    priorityCircle5.className = "priority-circle";
-    priorityCardWrapper.appendChild(priorityCircle5);
-    const priorityCircle6 = document.createElement("div");
-    priorityCircle6.className = "priority-circle";
-    priorityCardWrapper.appendChild(priorityCircle6);*/
-
 
     //render delete button
     const delCard = document.createElement("div");
