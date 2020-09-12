@@ -387,6 +387,27 @@ export function renderDeck(Board, domCardList, eventsLoad) {
     }
 }
 
+function getPriorityColor(todoPriority) {
+    switch(todoPriority) {
+        case "low":
+            return "rgb(65,190,255)";
+        case "med":
+            return "rgb(255, 240, 0)";
+        case "high":
+            return "rgb(255, 0, 0)";
+    }
+}
+
+export function renderPriorityCircle(todo, priorityCardWrapper) {
+    const priorityCircle = document.createElement("div");
+    priorityCircle.className = "priority-circle";
+    priorityCardWrapper.appendChild(priorityCircle);
+
+    const todoPriority = todo.getPriority();
+    const circleColor = getPriorityColor(todoPriority);
+    priorityCircle.style.backgroundColor = circleColor;
+}
+
 export function renderCardDeck(Board, card, cardsWrap, domCardList, eventsLoad) {
     const domCard = document.createElement("div");
     //need to add event to card
@@ -403,6 +424,48 @@ export function renderCardDeck(Board, card, cardsWrap, domCardList, eventsLoad) 
 
     domCardTitle.className = "card-title";
     domCardTitle.innerHTML = card.getCardTitle();
+
+    //priority preview
+    const priorityCardWrapper = document.createElement("div");
+    priorityCardWrapper.className = "priority-card-wrap";
+    domCard.appendChild(priorityCardWrapper);
+
+    //circle for first 6 todo
+    const todoList = card.getTodoList();
+    const i = todoList.length;
+
+    if(i >= 6) {
+        //just create 6 circles
+        for(let z = 0; z < 6; z++) {
+            renderPriorityCircle(todoList[z], priorityCardWrapper);
+        }
+    } else {
+        //create all todos
+        for(let y = 0; y < i; y++) {
+            renderPriorityCircle(todoList[y], priorityCardWrapper);
+        }
+    }
+    
+    
+    
+    //circle for each todo
+    /*const priorityCircle2 = document.createElement("div");
+    priorityCircle2.className = "priority-circle";
+    priorityCardWrapper.appendChild(priorityCircle2);
+    //circle for each todo
+    const priorityCircle3 = document.createElement("div");
+    priorityCircle3.className = "priority-circle";
+    priorityCardWrapper.appendChild(priorityCircle3);
+    const priorityCircle4 = document.createElement("div");
+    priorityCircle4.className = "priority-circle";
+    priorityCardWrapper.appendChild(priorityCircle4);
+    const priorityCircle5 = document.createElement("div");
+    priorityCircle5.className = "priority-circle";
+    priorityCardWrapper.appendChild(priorityCircle5);
+    const priorityCircle6 = document.createElement("div");
+    priorityCircle6.className = "priority-circle";
+    priorityCardWrapper.appendChild(priorityCircle6);*/
+
 
     //render delete button
     const delCard = document.createElement("div");
