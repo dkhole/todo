@@ -1,6 +1,6 @@
 # todo
 -----------------------------------------------------------------------------
-    # Final Patch
+# Final Patch
 
 -   Have to fix close card/open card event loader bug.
 -   Have to remove ability to click other options whilst in delete mode
