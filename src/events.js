@@ -123,6 +123,16 @@ export function deleteEvent(card, del, delFlag) {
             del.textContent = "Delete Todo";
 
             deleteDomList();
+             
+            //reveal buttons
+            const quickAdd = document.getElementById("quick-add");
+            const addButton = document.getElementById("add-button");
+            const cardList = document.getElementById("card-list");
+
+            quickAdd.style.visibility = "visible";
+            addButton.style.visibility = "visible";
+            cardList.style.visibility = "visible";
+
             renderList(card);
             clickCard(card);
             delFlag = false;
@@ -141,50 +151,8 @@ export function deleteEvent(card, del, delFlag) {
 }
 
 function openCardsEvent (Board, cardOpen, eventsLoad) {
-    const openEvent = function() {
-        const domCardList = document.getElementById("card-list");
-        const openCards = document.getElementById("open-cards");
-        const mainCard = document.getElementById("main-card");
-        const cardWrapper = document.getElementById("card-wrapper");
-
-        if(cardOpen) {
-            //close card list
-            domCardList.style.height = "2.5%";
-            openCards.style.height = "100%";
-            mainCard.style.height = "90%";
-            cardWrapper.style.height = "83%";
-
-            const domTodoList = document.getElementById("todo-list").children;
-
-     
-            for(let i = 0; i < domTodoList.length; i++) {
-                domTodoList[i].className = domTodoList[i].className.substring(0, 9);
-            }
-
-            cardOpen = false;
-
-            //delete button, cards wrap and all its children
-            removeDeckRender();
-
-        } else {
-            //open card list
-            domCardList.style.height = "32.5%";
-            openCards.style.height = "10%";
-            mainCard.style.height = "67.5%";
-            cardWrapper.style.height = "90%";
-            //toggle smaller todolist height
-            const domTodoList1 = document.getElementById("todo-list").children;
-            for(let y = 0; y < domTodoList1.length; y++) {
-                domTodoList1[y].className += " card-list-todo";
-            }
-            
-            cardOpen = true;
-
-            //render card list
-            renderDeck(Board, domCardList, eventsLoad);
-        }
-    }
-    return openEvent;
+    const domCardList = document.getElementById("card-list");
+    renderDeck(Board, domCardList, eventsLoad);
 }
 
 export function refreshEvents(card, eventsLoad) {
@@ -223,10 +191,7 @@ export function addEventsOnLoad(Board, card) {
 
     addEventsOnForm(card, eventsLoad);
 
-    const openEvent = openCardsEvent(Board, cardOpen, eventsLoad);
-    const openCards = document.getElementById("open-cards");
-    openCards.addEventListener("click", openEvent);
-    eventsLoad.push(openEvent);
+    openCardsEvent(Board, cardOpen, eventsLoad);
 
     return eventsLoad;
 }

@@ -36,7 +36,7 @@ tutorial2.setNotes("Reaarange seamlessly");
 const tutorial3 = Todo("Click delete to activate delete mode", "low", "3 Sept");
 tutorial3.setNotes("Delete mode will let you decide which todos to remove for good");
 
-const tutorial4 = Todo("Click orange arrow to reveal your deck", "high", "3 Sept");
+const tutorial4 = Todo("Look below orange arrow to see your deck", "high", "3 Sept");
 tutorial4.setNotes("All todos belong to cards and we refer to all your cards as your deck. Use cards to organise your todos");
 
 tutorialCard.addTodo(tutorial1);
@@ -84,9 +84,8 @@ shopping.addTodo(shopItem6);
 
 Board.addCard(shopping);
 
-addEventsOnLoad(Board, tutorialCard);
+const eventsLoad = addEventsOnLoad(Board, tutorialCard);
 renderCard(tutorialCard);
-
 renderList(tutorialCard);
 prompt("made it");
 

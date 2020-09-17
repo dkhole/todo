@@ -332,6 +332,14 @@ export function renderDeleteTodo(card, todo) {
         card.removeTodo(todo);
     })
 
+    //hide quickadd, newtodo and cards
+    const quickAdd = document.getElementById("quick-add");
+    const addButton = document.getElementById("add-button");
+    const cardList = document.getElementById("card-list");
+
+    quickAdd.style.visibility = "hidden";
+    addButton.style.visibility = "hidden";
+    cardList.style.visibility = "hidden";
 }
 
 export function deleteDomList() {
